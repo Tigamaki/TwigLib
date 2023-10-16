@@ -1,0 +1,12 @@
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\bin\Release\net6.0\TwigLib.deps.json
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\bin\Release\net6.0\TwigLib.dll
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\bin\Release\net6.0\TwigLib.pdb
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\obj\Release\net6.0\TwigLib.csproj.AssemblyReference.cache
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\obj\Release\net6.0\TwigLib.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\obj\Release\net6.0\TwigLib.AssemblyInfoInputs.cache
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\obj\Release\net6.0\TwigLib.AssemblyInfo.cs
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\obj\Release\net6.0\TwigLib.csproj.CoreCompileInputs.cache
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\obj\Release\net6.0\TwigLib.dll
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\obj\Release\net6.0\refint\TwigLib.dll
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\obj\Release\net6.0\TwigLib.pdb
+C:\Users\Ellie\source\repos\TwigLib\TwigLib\obj\Release\net6.0\ref\TwigLib.dll
