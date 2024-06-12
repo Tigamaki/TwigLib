@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TwigLib.Config;
 
 namespace TwigLib.Entities
 {
     public class Tile
     {
         #region attributes
-        protected Vector2 position;
+        protected Vector2 position = Vector2.Zero;
 
         //Source tilesheet 
         protected string tile_sheet;
@@ -31,18 +32,56 @@ namespace TwigLib.Entities
 
         #region constructors
         public Tile() {
-            position = Vector2.Zero;
             tile_sheet = "Default";
             source_position = Point.Zero;
 
             tile_layer = -1;
-            tile_size = new Point(1);
+            //default tile size is 16
+            tile_size = new Point(16);
 
             traversible = true;
             cost = 1;
 
             tile_color = alt_color = back_color = Color.White;
         }
+        
+        // For Factory-ing from a template
+        public Tile(Tile t)
+        {
+            position = t.Position();
+            tile_sheet = t.TileSheet();
+            source_position = t.SourcePosition();
+
+            tile_layer = t.Layer();
+            //default tile size is 16
+            tile_size = t.TileSize();
+
+            traversible = t.Traversible();
+            cost = t.TraverseCost();
+
+            tile_color = t.TileColor();
+            alt_color = t.AltColor();
+            back_color = t.BackColor();
+        }
+
+        // For Loader deserialization
+        public Tile(TileData tile_data)
+        {
+            tile_sheet = tile_data.tile_sheet;
+            source_position = new Point(tile_data.source_position_x, tile_data.source_position_y);
+
+            tile_layer = tile_data.tile_layer;
+            //default tile size is 16
+            tile_size = new Point(tile_data.tile_size);
+
+            traversible = tile_data.traversible;
+            cost = tile_data.cost;
+
+            tile_color = tile_data.tile_color.fromXML();
+            alt_color = tile_data.alt_color.fromXML();
+            back_color = tile_data.back_color.fromXML();
+        }
+
         #endregion
 
         #region attribute getters
@@ -70,10 +109,11 @@ namespace TwigLib.Entities
         }
 
         //Default tiles are 16x16. Base tiles are always square, use transparency for rectangles.
-        public void setTileData(string sheet_name, int tile_pos_x = 0, int tile_pos_y = 0, int tile_size = 16)
+        public void setTileData(string sheet_name, int tile_pos_x = 0, int tile_pos_y = 0, int size = 16)
         {
             tile_sheet = sheet_name;
             source_position = new Point(tile_pos_x, tile_pos_y);
+            tile_size = new Point(size);
         }
 
         public void setTraversalData(bool can_traverse = true, int move_cost = 1)

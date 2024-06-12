@@ -9,8 +9,13 @@ namespace TwigLib.Utilities
     public class Camera
     {
         protected Point position;
+        protected Point default_position;
+
         protected int cam_height; //AKA Zoom Level
+        protected int default_height;
+
         protected int camera_speed;
+        protected int default_speed;
 
         public Camera()
         {
@@ -18,9 +23,9 @@ namespace TwigLib.Utilities
         }
         public Camera(int position_x, int position_y, int height = 1, int pan_speed = 1)
         {
-            position = new Point(position_x, position_y);
-            cam_height = height;
-            camera_speed = pan_speed;
+            default_position = position = new Point(position_x, position_y);
+            default_height = cam_height = height;
+            default_speed = camera_speed = pan_speed;
         }
 
         #region attribute getters
@@ -50,9 +55,9 @@ namespace TwigLib.Utilities
 
         public void Reset()
         {
-            position = Point.Zero;
-            cam_height = 0;
-            camera_speed = 1;
+            position = default_position;
+            cam_height = default_height;
+            camera_speed = default_speed;
         }
         #endregion
 
@@ -61,6 +66,10 @@ namespace TwigLib.Utilities
         {
             var cam_shift = current_state.Position - prev_state.Position;
             position += cam_shift;
+        }
+        public void ResetPosition()
+        {
+            position = default_position;
         }
         #endregion
 
