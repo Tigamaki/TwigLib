@@ -1,11 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using MLEM.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TwigLib.Config;
 using TwigLib.Utilities;
 
@@ -21,8 +17,7 @@ namespace TwigLib.Entities.Generation
         private Texture2D m_tex_sheet;
         private Point m_tile_size;
 
-        private Utilities.Camera m_camera;
-
+        private Point m_cam_offset;
 
         public TileMap(int width, int height, Dictionary<int,Tile> sources, Point cam_offset, int tile_size = 16)
         {
@@ -33,9 +28,10 @@ namespace TwigLib.Entities.Generation
             m_height_max = height;
 
             m_tile_sources = sources;
-            m_camera = new Utilities.Camera(cam_offset.X,cam_offset.Y);
 
             m_tile_size = new Point(tile_size);
+
+            m_cam_offset = cam_offset;
         }
 
 
@@ -94,14 +90,19 @@ namespace TwigLib.Entities.Generation
 
         public void DrawLayer(ref SpriteBatch spriteBatch, int index)
         {
+
+            // We want to shunt the map up and left by half its total size, so that the camera is centered on it.
+
+            Point draw_offset = new Point(m_width_max, m_height_max) * m_tile_size.Divide(-2);
             var layer = m_layers[index];
+
             for (int p_y = 0; p_y < layer.Height(); p_y++)
             {
                 for (int p_x = 0; p_x < layer.Width(); p_x++)
                 {
                     var xy_tile = layer.Fetch(new Point(p_x, p_y));
                     var t_size = xy_tile.TileSize();
-                    var t_pos = (xy_tile.Position().ToPoint() * m_tile_size) + m_camera.Position();
+                    var t_pos = (xy_tile.Position().ToPoint() * m_tile_size) + draw_offset;
                     spriteBatch.Draw(m_tex_sheet, new Rectangle(t_pos, m_tile_size), new Rectangle(xy_tile.SourcePosition(), t_size), xy_tile.TileColor());
                 }
             }
@@ -110,9 +111,9 @@ namespace TwigLib.Entities.Generation
         }
         #endregion
 
-        public ref Camera Camera()
+        public Point CameraOffset()
         {
-            return ref m_camera;
+            return m_cam_offset.Multiply(-1);
         }
 
     }
