@@ -61,7 +61,8 @@ namespace TwigLib.Config
         public int source_position_y{ get; set;} = 0;
 
         public int tile_layer{ get; set;} = -1;
-        public int tile_size{ get; set;} = 16;
+        public int tile_size_x { get; set; } = 16;
+        public int tile_size_y { get; set; } = 16;
 
         //Traversal values
         public bool traversible{ get; set;} = true;

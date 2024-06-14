@@ -72,7 +72,7 @@ namespace TwigLib.Entities
 
             tile_layer = tile_data.tile_layer;
             //default tile size is 16
-            tile_size = new Point(tile_data.tile_size);
+            tile_size = new Point(tile_data.tile_size_x, tile_data.tile_size_y);
 
             traversible = tile_data.traversible;
             cost = tile_data.cost;
