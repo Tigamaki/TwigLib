@@ -11,10 +11,7 @@ namespace TwigLib.Utilities
     public class CameraManager
     {
         protected Vector2 default_position;
-        
-        // Raw offset value to center camera.
-        protected Vector2 m_graphics_offset;
-        
+                
         protected float m_camera_scale;
         protected int m_camera_speed;
 
@@ -32,21 +29,18 @@ namespace TwigLib.Utilities
             m_camera = new Camera(g_dm.GraphicsDevice);
             default_position = default_offset;
 
-            m_graphics_offset = new Vector2(0.5f) * new Vector2(g_dm.PreferredBackBufferWidth, g_dm.PreferredBackBufferHeight);
-            m_camera.Position = default_position - m_graphics_offset;
 
             // Rather than setting scale to default, set to 1 then scale to default.
             m_camera.Scale = m_camera_scale = default_scale;
 
-            m_camera.Position /= default_scale;
-            default_position = m_camera.Position + (m_graphics_offset / m_camera.Scale);
-
+            m_camera.LookingPosition = default_position;
+                                    
             m_camera_speed = default_speed;
 
         }
 
         #region attribute getters
-        public Vector2 Position() { return m_camera.Position; }
+        public Vector2 Position() { return m_camera.LookingPosition; }
         public float Scale() { return m_camera.Scale; }
         public int PanSpeed() { return m_camera_speed; }
 
@@ -61,23 +55,23 @@ namespace TwigLib.Utilities
 
             // Scale graphics_offset pre-emptively
 
-            var new_pos = m_camera.Position - distance;
-            BindClamp(ref new_pos);
+            m_camera.LookingPosition -= distance;
+            if (m_bound)
+                BindClamp();
 
-            m_camera.Position = new_pos;
 
         }
-        public void BindClamp(ref Vector2 position)
+        public void BindClamp()
         {
-            var scaled_offset = m_graphics_offset * m_camera_scale / m_camera.Scale;
-            var scaled_binds = m_bind_limits.Multiply(m_camera.Scale);
+            var position = m_camera.LookingPosition;
 
-            position += scaled_offset;
+            var scaled_binds = m_bind_limits;
 
             position.X = Math.Clamp(position.X, -scaled_binds.X, scaled_binds.X);
             position.Y = Math.Clamp(position.Y, -scaled_binds.Y, scaled_binds.Y);
 
-            position -= scaled_offset;
+
+            m_camera.LookingPosition = position;
         }
 
 
@@ -89,7 +83,8 @@ namespace TwigLib.Utilities
 
             // Camera shifts are inverted
             m_camera.Position *= (old_scale / m_camera.Scale);
-            BindClamp(ref m_camera.Position);
+            if(m_bound)
+                BindClamp();
 
 
 
@@ -102,13 +97,14 @@ namespace TwigLib.Utilities
         public void Reset()
         {
             m_camera.Scale = m_camera_scale;
-            m_camera.Position = default_position - (m_graphics_offset / m_camera.Scale);
+            m_camera.LookingPosition = default_position;
         }
 
         public void BindCameraToLevel(Point level_bounds)
         {
             m_bound = true;
-            // Bind Limits are 50% from each side, so halve it.
+            // Bind Limits are 50% from each side, so halve it. 
+            // Bind is for a scale of 1
             m_bind_limits = level_bounds;
         }
         #endregion
