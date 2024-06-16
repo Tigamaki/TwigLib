@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MLEM.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,10 +66,10 @@ namespace TwigLib.Entities
         }
 
         // For Loader deserialization
-        public Tile(TileData tile_data)
+        public Tile(TileData tile_data, int source_scaling = 1)
         {
             tile_sheet = tile_data.tile_sheet;
-            source_position = new Point(tile_data.source_position_x, tile_data.source_position_y);
+            source_position = new Point(tile_data.source_position_x, tile_data.source_position_y).Multiply(source_scaling);
 
             tile_layer = tile_data.tile_layer;
             //default tile size is 16

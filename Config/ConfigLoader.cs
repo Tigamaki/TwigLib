@@ -40,7 +40,7 @@ namespace TwigLib.Content
 
             foreach (var tile in loaded_tiles.TileSet)
             {
-                tile_set.Add(tile.ID, new Tile(tile));
+                tile_set.Add(tile.ID, new Tile(tile, loaded_tiles.SourcePositionScaling));
             }
 
             return tile_set;

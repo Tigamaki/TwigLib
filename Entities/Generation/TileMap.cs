@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MLEM.Extensions;
 using System;
+using System.Diagnostics.Contracts;
 using TwigLib.Config;
 using TwigLib.Utilities;
 
@@ -14,7 +15,7 @@ namespace TwigLib.Entities.Generation
         private int m_height_max;
 
         Dictionary<int, Tile> m_tile_sources;
-        private Texture2D m_tex_sheet;
+        private Dictionary<string, Texture2D> m_tex_sheet;
         private Point m_tile_size;
 
         private Point m_cam_offset;
@@ -35,9 +36,9 @@ namespace TwigLib.Entities.Generation
         }
 
 
-        public void SetTextureSheet(Texture2D tex_sheet)
+        public void SetTextureSheets(Dictionary<string, Texture2D> tex_sheets)
         {
-            m_tex_sheet = tex_sheet;
+            m_tex_sheet = tex_sheets;
         }
 
         public void AddBackground(int tile_id)
@@ -78,7 +79,6 @@ namespace TwigLib.Entities.Generation
         public int Height() { return m_height_max; }
 
 
-
         #region rendering
         public void DrawLayers(ref SpriteBatch spriteBatch)
         {
@@ -103,7 +103,7 @@ namespace TwigLib.Entities.Generation
                     var xy_tile = layer.Fetch(new Point(p_x, p_y));
                     var t_size = xy_tile.TileSize();
                     var t_pos = (xy_tile.Position().ToPoint() * m_tile_size) + draw_offset;
-                    spriteBatch.Draw(m_tex_sheet, new Rectangle(t_pos, m_tile_size), new Rectangle(xy_tile.SourcePosition(), t_size), xy_tile.TileColor());
+                    spriteBatch.Draw(m_tex_sheet[xy_tile.TileSheet()], new Rectangle(t_pos, m_tile_size), new Rectangle(xy_tile.SourcePosition(), t_size), xy_tile.TileColor());
                 }
             }
 
@@ -114,6 +114,16 @@ namespace TwigLib.Entities.Generation
         public Point CameraOffset()
         {
             return m_cam_offset.Multiply(-1);
+        }
+        
+        // Returns the "bounds" of the map, AKA how far from the edge of the screen it can be placed.
+        // By default, half map size. may add flexibility
+        public Point Bounds()
+        {
+            return new Point(
+                m_width_max * m_tile_size.X / 2,
+                m_height_max * m_tile_size.Y / 2
+            );
         }
 
     }

@@ -46,6 +46,7 @@ namespace TwigLib.Config
 
     public class TileDataSet
     {
+        public int SourcePositionScaling { get; set; } = 1;
         public List<TileData> TileSet { get; set; } = new List<TileData>();
     }
 
