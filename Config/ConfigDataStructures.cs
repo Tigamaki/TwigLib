@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MLEM.Extensions;
+using MonoGame.Framework.Content.Pipeline.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,25 +71,18 @@ namespace TwigLib.Config
         public int cost{ get; set;} = 1;
 
         //Tinting and transparency
-        public XMLColor tile_color{ get; set;} = new XMLColor();
-        public XMLColor alt_color{ get; set;} = new XMLColor();
-        public XMLColor back_color{ get; set;} = new XMLColor();
-    }
+        public string tile_color{ get; set;} = "255,255,255,1";
+        public string alt_color{ get; set;} = "255,255,255,1";
+        public string back_color { get; set;} = "255,255,255,1";
 
-    public class XMLColor
-    {
-        public int r { get; set; } 
-        public int g { get; set; } 
-        public int b { get; set; } 
-        public float a { get; set; } 
+        public Color TileColor() { return FromXMLColor(tile_color); }
+        public Color AltColor() { return FromXMLColor(alt_color); }
+        public Color BackColor() { return FromXMLColor(back_color); }
 
-        public XMLColor()
+        public Color FromXMLColor(string col_string)
         {
-        }
-        public Color fromXML()
-        {
-            var rgba = new Color(r, g, b);
-            return new Color(rgba, a);
+            var col_array = col_string.Split(',').Select(x => float.Parse(x)).ToList();
+            return new Color(col_array[0], col_array[1], col_array[2], col_array[3]);
         }
     }
 }

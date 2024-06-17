@@ -78,9 +78,9 @@ namespace TwigLib.Entities
             traversible = tile_data.traversible;
             cost = tile_data.cost;
 
-            tile_color = tile_data.tile_color.fromXML();
-            alt_color = tile_data.alt_color.fromXML();
-            back_color = tile_data.back_color.fromXML();
+            tile_color = tile_data.TileColor();
+            alt_color = tile_data.AltColor();
+            back_color = tile_data.BackColor();
         }
 
         #endregion
