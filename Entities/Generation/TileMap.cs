@@ -78,6 +78,7 @@ namespace TwigLib.Entities.Generation
         public int Width() { return m_width_max; }
         public int Height() { return m_height_max; }
 
+        public Point TileSize() { return m_tile_size; }
 
         #region rendering
         public void DrawLayers(ref SpriteBatch spriteBatch)
@@ -93,7 +94,6 @@ namespace TwigLib.Entities.Generation
 
             // We want to shunt the map up and left by half its total size, so that the camera is centered on it.
 
-            Point draw_offset = new Point(m_width_max, m_height_max) * m_tile_size.Divide(-2);
             var layer = m_layers[index];
 
             for (int p_y = 0; p_y < layer.Height(); p_y++)
@@ -102,7 +102,7 @@ namespace TwigLib.Entities.Generation
                 {
                     var xy_tile = layer.Fetch(new Point(p_x, p_y));
                     var t_size = xy_tile.TileSize();
-                    var t_pos = (xy_tile.Position().ToPoint() * m_tile_size) + draw_offset;
+                    var t_pos = (xy_tile.Position().ToPoint() * m_tile_size) + DrawOffset();
                     spriteBatch.Draw(m_tex_sheet[xy_tile.TileSheet()], new Rectangle(t_pos, m_tile_size), new Rectangle(xy_tile.SourcePosition(), t_size), xy_tile.TileColor());
                 }
             }
@@ -115,6 +115,10 @@ namespace TwigLib.Entities.Generation
         {
             return m_cam_offset.Multiply(-1);
         }
+        public Point DrawOffset()
+        {
+            return new Point(m_width_max, m_height_max) * m_tile_size.Divide(-2);
+        }
         
         // Returns the "bounds" of the map, AKA how far from the edge of the screen it can be placed.
         // By default, half map size. may add flexibility
@@ -124,6 +128,24 @@ namespace TwigLib.Entities.Generation
                 m_width_max * m_tile_size.X / 2,
                 m_height_max * m_tile_size.Y / 2
             );
+        }
+
+        // Returns the stack of tiles at a given co-ordinate, unless a specific layer is given
+        public Dictionary<int, Tile> TilesAtCoordinate(Point position, int? layer = null)
+        {
+            Dictionary<int, Tile> return_dict = new Dictionary<int, Tile>();
+
+            if (layer != null)
+                return_dict.Add(layer.Value, m_layers[layer.Value].Fetch(position));
+            else
+            {
+                for (var i = 0; i < m_layers.Count(); i++) {
+                    return_dict.Add(i, m_layers[i].Fetch(position));
+                }
+            }
+
+            return return_dict;
+
         }
 
     }

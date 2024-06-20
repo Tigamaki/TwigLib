@@ -126,5 +126,21 @@ namespace TwigLib.Utilities
         }
         #endregion
 
+        #region mouse_functions
+        public Vector2 GetMouseScreenPos(MouseState mouse)
+        {
+            var mp_screen = m_camera.ToWorldPos(mouse.Position.ToVector2());
+            return mp_screen;
+        }
+
+        //
+        public Vector2 GetMouseWorldPos(MouseState mouse, Vector2 offset)
+        {
+            // Cancel out drawoffset
+            var mp_world = GetMouseScreenPos(mouse) - offset;
+            return mp_world;
+        }
+        #endregion
+
     }
 }
