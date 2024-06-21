@@ -148,5 +148,20 @@ namespace TwigLib.Entities.Generation
 
         }
 
+        public List<Point> GetPathToMouse(Point start_tile, Point mouse_tile, int entity_layer, List<Point> filter)
+        {
+            var tiles = m_layers[entity_layer].TraversibleTiles();
+
+            foreach(var f in filter)
+            {
+                tiles.Remove(f);
+            }
+
+            Pathfinder_Grid t_pathfinder = new Pathfinder_Grid();
+            var path = t_pathfinder.AStar(start_tile, mouse_tile, tiles);
+
+            return path;
+        }
+
     }
 }

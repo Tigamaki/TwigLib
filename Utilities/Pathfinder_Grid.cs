@@ -23,60 +23,68 @@ namespace TwigLib.Utilities
 
         public List<Point> AStar(Point origin, Point target, List<Point> valid_tiles)
         {
-
-            m_open = new List<Node>();
-            m_closed = new List<Point>();
-
-            //valid tiles excludes any non-traversible ones.
-            m_node_set = new List<Node>();
-            valid_tiles.ForEach(t => m_node_set.Add(new Node(t, origin, target)));
-
-            //Add start node to Open
-            m_open.Add(m_node_set.Where(x => x.Location() == origin).First());
-
-            bool path_found = false;
-            while (!path_found)
+            try
             {
-                if (m_open.Count == 0)
+                m_open = new List<Node>();
+                m_closed = new List<Point>();
+
+                //valid tiles excludes any non-traversible ones.
+                m_node_set = new List<Node>();
+                valid_tiles.ForEach(t => m_node_set.Add(new Node(t, origin, target)));
+
+                //Add start node to Open
+                m_open.Add(m_node_set.Where(x => x.Location() == origin).First());
+
+                bool path_found = false;
+                while (!path_found)
                 {
-                    path_found = true;
-                    break;
-                }
-
-                var current = m_open.OrderBy(x => x.F_Total()).First();
-                m_open.Remove(current);
-                m_closed.Add(current.Location());
-
-                // If target is found, exit loop.
-                if (current.Location() == target)
-                {
-                    path_found = true;
-                    break;
-                }
-
-                foreach (var n in Neighbours(current))
-                {
-                    int c_f_total = current.F_Total();
-
-                    if (!m_open.Any(x => x.Location() == n.Location()))
+                    if (m_open.Count == 0)
                     {
-                        m_open.Add(n);
+                        path_found = true;
+                        break;
                     }
 
-                    var n_open = m_open.Where(x => x.Location() == n.Location()).FirstOrDefault();
-                    if (c_f_total <= n_open.F_Total())
+                    var current = m_open.OrderBy(x => x.F_Total()).First();
+                    m_open.Remove(current);
+                    m_closed.Add(current.Location());
+
+                    // If target is found, exit loop.
+                    if (current.Location() == target)
                     {
-                        n_open.New_F_Cost(current.F_Cost());
-                        n_open.Parent = current;
+                        path_found = true;
+                        break;
+                    }
+
+                    foreach (var n in Neighbours(current))
+                    {
+                        int c_f_total = current.F_Total();
+
+                        if (!m_open.Any(x => x.Location() == n.Location()))
+                        {
+                            m_open.Add(n);
+                        }
+
+                        var n_open = m_open.Where(x => x.Location() == n.Location()).FirstOrDefault();
+                        if (c_f_total <= n_open.F_Total())
+                        {
+                            n_open.New_F_Cost(current.F_Cost());
+                            n_open.Parent = current;
+                        }
+
                     }
 
                 }
 
+                var end_node = m_node_set.OrderBy(x => PointDistance(x.Location(), target)).First();
+                var final_path = end_node.PathTo();
+             
+                return final_path;
             }
-
-            var end_node = m_node_set.OrderBy(x => PointDistance(x.Location(), target)).First();
-            var final_path = end_node.PathTo();
-            return final_path;
+            catch
+            {
+                // No valid paths.
+                return new List<Point>();
+            }
         }
 
         protected List<Node> Neighbours(Node n)

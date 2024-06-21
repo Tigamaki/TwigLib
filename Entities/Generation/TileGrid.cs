@@ -73,6 +73,15 @@ namespace TwigLib.Entities.Generation
         {
             return m_tile_grid[position.Y][position.X];
         }
+        public List<Point> TraversibleTiles(bool traversible = true)
+        {
+            List<Point> tiles = new List<Point>();
+            foreach(var t in m_tile_grid)
+            {
+                t.ForEach(x => { if (x.Traversible())  tiles.Add(x.Position().ToPoint()); });
+            }
 
+            return tiles;
+        }
     }
 }
