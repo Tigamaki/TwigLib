@@ -46,10 +46,10 @@ namespace TwigLib.Content
             return tile_set;
         }
 
-        public TileMap LoadMap(string path, Dictionary<int, Tile> tile_sources)
+        public TileMap LoadMap(string path, Dictionary<int, Tile> tile_sources, string class_reference = "ConfigDataStructures")
         {
             var reader = GetFile(path);
-            var loaded_map = IntermediateSerializer.Deserialize<MapData>(reader, "ConfigDataStructures");
+            var loaded_map = IntermediateSerializer.Deserialize<MapData>(reader, class_reference);
             
             if(loaded_map == null)
             {

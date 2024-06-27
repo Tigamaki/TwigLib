@@ -15,7 +15,7 @@ namespace TwigLib.Entities.Generation
         private int m_height_max;
 
         Dictionary<int, Tile> m_tile_sources;
-        private Dictionary<string, Texture2D> m_tex_sheet;
+        private Dictionary<string, Texture2D> m_tex_sheets;
         private Point m_tile_size;
 
         private Point m_cam_offset;
@@ -36,9 +36,10 @@ namespace TwigLib.Entities.Generation
         }
 
 
+        public Dictionary<string, Texture2D> TextureSheets() { return m_tex_sheets; }
         public void SetTextureSheets(Dictionary<string, Texture2D> tex_sheets)
         {
-            m_tex_sheet = tex_sheets;
+            m_tex_sheets = tex_sheets;
         }
 
         public void AddBackground(int tile_id)
@@ -103,7 +104,7 @@ namespace TwigLib.Entities.Generation
                     var xy_tile = layer.Fetch(new Point(p_x, p_y));
                     var t_size = xy_tile.TileSize();
                     var t_pos = (xy_tile.Position().ToPoint() * m_tile_size) + DrawOffset();
-                    spriteBatch.Draw(m_tex_sheet[xy_tile.TileSheet()], new Rectangle(t_pos, m_tile_size), new Rectangle(xy_tile.SourcePosition(), t_size), xy_tile.TileColor());
+                    spriteBatch.Draw(m_tex_sheets[xy_tile.TileSheet()], new Rectangle(t_pos, m_tile_size), new Rectangle(xy_tile.SourcePosition(), t_size), xy_tile.TileColor());
                 }
             }
 
